@@ -40,7 +40,6 @@
       .attr("transform", `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
-      .attr("transform", "rotate(-30)")
       .style("text-anchor", "end");
   
    
@@ -53,7 +52,8 @@
   .attr("y", margin.top / 2)
   .attr("text-anchor", "middle")
   .style("font-size", "14px")
-  .text(`Fines by Age Band for ${data[0]?.state || 'Selected State'}`);
+  .style("font-weight", "bold")
+  .text(`Fines by Age Group for ${data[0]?.state || 'Selected State'}`);
   
   
     
