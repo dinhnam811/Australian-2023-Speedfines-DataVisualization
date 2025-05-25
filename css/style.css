@@ -54,4 +54,8 @@ body {
       grid-template-rows: auto;
     }
   }
+  #map-chart {
+    grid-column: span 2;
+    height: 600px;
+  }
   
