@@ -33,7 +33,7 @@
       .attr("y", d => y(d.fines))
       .attr("height", d => y(0) - y(d.fines))
       .attr("width", x.bandwidth())
-      .attr("fill", "#69b3a2");
+      .attr("fill", "#6baed6");
   
 
     svg.append("g")
