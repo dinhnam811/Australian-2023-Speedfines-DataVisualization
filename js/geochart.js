@@ -40,14 +40,21 @@ d3.json("js/australia_states_clean.geojson").then(geoData => {
       .on("mouseout", function () {
         d3.select(this).attr("stroke-width", 0.5);
       });
-      function highlightMapState(stateCode) {
-        d3.selectAll("#map-chart path")
-          .attr("opacity", d => d.properties.state === stateCode ? 1 : 0.3);
-      }
+      
       function updateBarChart(selectedState, year) {
         const filteredData = allData.bar.filter(d => 
           d.state === selectedState && d.year === year
         );
         drawBarChart(filteredData);
       }
-  });
+      
+    d3.select("#map-chart").on("mouseleave", function() {
+        svg.selectAll("path")
+            .attr("opacity", 0.6); 
+    });
+    
+    d3.select("#map-chart").on("mouseenter", function() {
+        svg.selectAll("path")
+            .attr("opacity", 1);
+    });
+  }); 

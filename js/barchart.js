@@ -55,33 +55,7 @@
   .style("font-size", "14px")
   .text(`Fines by Age Band for ${data[0]?.state || 'Selected State'}`);
   
-  svg.selectAll("rect")
-  .data(data)
-  .join(
-      enter => enter.append("rect")
-          .attr("x", d => x(d.ageband))
-          .attr("y", height - margin.bottom)
-          .attr("width", x.bandwidth())
-          .attr("height", 0)
-          .attr("fill", "#69b3a2")
-          .call(enter => enter.transition().duration(duration)
-              .attr("y", d => y(d.fines))
-              .attr("height", d => y(0) - y(d.fines))
-          ),
-      update => update
-          .call(update => update.transition().duration(duration)
-              .attr("x", d => x(d.ageband))
-              .attr("y", d => y(d.fines))
-              .attr("height", d => y(0) - y(d.fines))
-              .attr("width", x.bandwidth())
-          ),
-      exit => exit
-          .call(exit => exit.transition().duration(duration)
-              .attr("y", height - margin.bottom)
-              .attr("height", 0)
-              .remove()
-          )
-    );
+  
     
   }
   
