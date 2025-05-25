@@ -44,6 +44,8 @@ d3.json("js/australia_states_clean.geojson").then(geoData => {
         const selectedState = d.properties.state;
         const year = +document.getElementById("year-filter").value;
         updateBarChart(selectedState, year);
+        updateStatsForState(selectedState);
+
   
         svg.selectAll("path").attr("opacity", 0.3);
         d3.select(event.currentTarget).attr("opacity", 1);
@@ -70,4 +72,13 @@ d3.json("js/australia_states_clean.geojson").then(geoData => {
         );
         drawBarChart(filteredData);
     }
+    
+    svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", 380)
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .style("font-weight", "bold")
+    .style("fill", "#333") 
+    .text("Map of Australia with Population Data");
 });

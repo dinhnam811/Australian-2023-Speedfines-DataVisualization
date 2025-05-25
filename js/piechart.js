@@ -52,5 +52,15 @@ function drawPieChart(pieData) {
       .style("border-radius", "4px")
       .style("pointer-events", "none")
       .style("font-size", "12px");
+
+      svg.append("text")
+      .attr("x", 10)
+      .attr("y", -140)
+      .attr("text-anchor", "middle")
+      .style("font-size", "14px")
+      .style("font-weight", "bold")
+      .text("Detection Methods for Fines");
+      
   }
+
   
