@@ -1,0 +1,91 @@
+
+
+  function drawBarChart(data) {
+    const width = 370;
+    const height = 300;
+    const margin = { top: 20, right: 20, bottom: 60, left: 60 };
+  
+    
+    d3.select("#bar-chart").selectAll("*").remove();
+  
+    const svg = d3.select("#bar-chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+  
+    
+    const x = d3.scaleBand()
+      .domain(data.map(d => d.ageband))
+      .range([margin.left, width - margin.right])
+      .padding(0.2);
+  
+    
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.fines)]).nice()
+      .range([height - margin.bottom, margin.top]);
+  
+   
+    svg.append("g")
+      .selectAll("rect")
+      .data(data)
+      .join("rect")
+      .attr("x", d => x(d.ageband))
+      .attr("y", d => y(d.fines))
+      .attr("height", d => y(0) - y(d.fines))
+      .attr("width", x.bandwidth())
+      .attr("fill", "#69b3a2");
+  
+
+    svg.append("g")
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(-30)")
+      .style("text-anchor", "end");
+  
+   
+    svg.append("g")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y).tickFormat(d3.format(".2s")));
+    
+      svg.append("text")
+  .attr("x", width / 2)
+  .attr("y", margin.top / 2)
+  .attr("text-anchor", "middle")
+  .style("font-size", "14px")
+  .text(`Fines by Age Band for ${data[0]?.state || 'Selected State'}`);
+  
+  svg.selectAll("rect")
+  .data(data)
+  .join(
+      enter => enter.append("rect")
+          .attr("x", d => x(d.ageband))
+          .attr("y", height - margin.bottom)
+          .attr("width", x.bandwidth())
+          .attr("height", 0)
+          .attr("fill", "#69b3a2")
+          .call(enter => enter.transition().duration(duration)
+              .attr("y", d => y(d.fines))
+              .attr("height", d => y(0) - y(d.fines))
+          ),
+      update => update
+          .call(update => update.transition().duration(duration)
+              .attr("x", d => x(d.ageband))
+              .attr("y", d => y(d.fines))
+              .attr("height", d => y(0) - y(d.fines))
+              .attr("width", x.bandwidth())
+          ),
+      exit => exit
+          .call(exit => exit.transition().duration(duration)
+              .attr("y", height - margin.bottom)
+              .attr("height", 0)
+              .remove()
+          )
+    );
+    
+  }
+  
+
+
+  
+  
