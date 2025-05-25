@@ -7,12 +7,12 @@ body {
 .dashboard {
   transform: scale(0.85);
   transform-origin: top left;
-  width: 117.65%; /* 100/0.85 */
+  width: 117.65%; 
   height: 117.65%;
 }
 
 .dashboard-header {
-  background-color: #0b9ec7; /* Nền trắng */
+  background-color: #0b9ec7;
   color: #333333;
   padding: 20px;
   border-radius: 8px;
