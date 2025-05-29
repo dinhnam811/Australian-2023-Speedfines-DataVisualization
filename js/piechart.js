@@ -1,7 +1,7 @@
 function drawTreeMap(data) {
-  const width = 300;  // Kích thước gốc
+  const width = 300;  
   const height = 200;
-  const scaleFactor = 0.7; // Scale nhỏ lại 70%
+  const scaleFactor = 0.7; 
 
   d3.select("#pie-chart").selectAll("*").remove();
 
@@ -12,11 +12,11 @@ function drawTreeMap(data) {
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "xMidYMid meet");
 
-  // Thêm group để scale
+
   const chartGroup = svg.append("g")
     .attr("transform", `scale(${scaleFactor})`);
 
-  // Tính toán lại kích thước treemap dựa trên scaleFactor
+
   const treemapWidth = width / scaleFactor;
   const treemapHeight = height / scaleFactor;
 
@@ -24,7 +24,7 @@ function drawTreeMap(data) {
     .sum(d => d.count);
 
   d3.treemap()
-    .size([treemapWidth, treemapHeight]) // Sử dụng kích thước đã scale
+    .size([treemapWidth, treemapHeight]) 
     .padding(2)(root);
 
   const color = d3.scaleOrdinal()
@@ -45,7 +45,7 @@ function drawTreeMap(data) {
     .style("pointer-events", "none")
     .style("font-size", "12px");
 
-  // Vẽ treemap vào chartGroup thay vì svg trực tiếp
+  
   chartGroup.selectAll("rect")
     .data(root.leaves())
     .enter()
