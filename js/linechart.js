@@ -1,4 +1,4 @@
-// js/linechart.js
+
 function drawLineChart(data) {
     const margin = { top: 20, right: 30, bottom: 50, left: 60 },
       width = 400 - margin.left - margin.right,
