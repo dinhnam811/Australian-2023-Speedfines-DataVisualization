@@ -17,10 +17,10 @@ Promise.all([
     allData.line = line;
     allData.pie = pie;
     allData.stat = stat;
-    drawTreemap(pie); 
     drawLineChart(line); 
     drawBarChart(bar.filter(d => d.state === "VIC"));
     drawStatChart(stat); 
+    drawTreeMap(pie);
     
     
 

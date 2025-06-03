@@ -1,66 +1,85 @@
-function drawPieChart(pieData) {
-    const width = 400;
-    const height = 300;
-    const margin = 40;
-    const radius = Math.min(width, height) / 2 - margin;
-  
-    const svg = d3.select("#pie-chart")
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`);
-  
-    const color = d3.scaleOrdinal()
-      .domain(pieData.map(d => d.method))
-      .range([
-        "#56B1F7", "#4E79A7", "#6BAED6", "#3182BD",
-        "#08306B", "#A6CEE3", "#D2E3F3", "#9ECAE1"
-      ]);
-  
-    const pie = d3.pie().value(d => d.count);
-    const data_ready = pie(pieData);
-  
-    const arc = d3.arc().innerRadius(0).outerRadius(radius);
-  
-    svg.selectAll('path')
-      .data(data_ready)
-      .join('path')
-      .attr('d', arc)
-      .attr('fill', d => color(d.data.method))
-      .attr("stroke", "#ffffff")
-      .style("stroke-width", "2px")
-      .on("mouseover", function (event, d) {
-        tooltip.style("opacity", 1)
-          .html(`<strong>${d.data.method}</strong><br>Count: ${d.data.count}`)
-          .style("left", (event.pageX + 10) + "px")
-          .style("top", (event.pageY - 28) + "px");
-        d3.select(this).attr("fill", "#08306B");
-      })
-      .on("mouseout", function (event, d) {
-        tooltip.style("opacity", 0);
-        d3.select(this).attr("fill", color(d.data.method));
-      });
-  
-    const tooltip = d3.select("body").append("div")
-      .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("opacity", 0)
-      .style("background-color", "#08306B")
-      .style("color", "white")
-      .style("padding", "6px 10px")
-      .style("border-radius", "4px")
-      .style("pointer-events", "none")
-      .style("font-size", "12px");
+function drawTreeMap(data) {
+  const width = 300;  
+  const height = 200;
+  const scaleFactor = 0.7; 
 
-      svg.append("text")
-      .attr("x", 10)
-      .attr("y", -140)
-      .attr("text-anchor", "middle")
-      .style("font-size", "14px")
-      .style("font-weight", "bold")
-      .text("Detection Methods for Fines");
-      
-  }
+  d3.select("#pie-chart").selectAll("*").remove();
+
+  const svg = d3.select("#pie-chart")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");
+
+
+  const chartGroup = svg.append("g")
+    .attr("transform", `scale(${scaleFactor})`);
+
+
+  const treemapWidth = width / scaleFactor;
+  const treemapHeight = height / scaleFactor;
+
+  const root = d3.hierarchy({ children: data })
+    .sum(d => d.count);
+
+  d3.treemap()
+    .size([treemapWidth, treemapHeight]) 
+    .padding(2)(root);
+
+  const color = d3.scaleOrdinal()
+    .domain(data.map(d => d.method))
+    .range([
+      "#56B1F7", "#4E79A7", "#6BAED6", "#3182BD",
+      "#08306B", "#A6CEE3", "#D2E3F3", "#9ECAE1"
+    ]);
+
+  const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("opacity", 0)
+    .style("background-color", "#08306B")
+    .style("color", "white")
+    .style("padding", "6px 10px")
+    .style("border-radius", "4px")
+    .style("pointer-events", "none")
+    .style("font-size", "12px");
 
   
+  chartGroup.selectAll("rect")
+    .data(root.leaves())
+    .enter()
+    .append("rect")
+    .attr("x", d => d.x0)
+    .attr("y", d => d.y0)
+    .attr("width", d => d.x1 - d.x0)
+    .attr("height", d => d.y1 - d.y0)
+    .attr("fill", d => color(d.data.method))
+    .on("mouseover", function(event, d) {
+      tooltip.style("opacity", 1)
+        .html(`<strong>${d.data.method}</strong><br>Count: ${d.data.count}`)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
+    })
+    .on("mouseout", function() {
+      tooltip.style("opacity", 0);
+    });
+
+  chartGroup.selectAll("text")
+    .data(root.leaves())
+    .enter()
+    .append("text")
+    .attr("x", d => d.x0 + 4)
+    .attr("y", d => d.y0 + 14)
+    .text(d => d.data.method)
+    .style("font-size", "10px")
+    .style("fill", "white");
+
+  chartGroup.append("text")
+    .attr("x", treemapWidth / 2)
+    .attr("y", 15)
+    .attr("text-anchor", "middle")
+    .style("font-size", "13px")
+    .style("font-weight", "bold")
+    .text("Detection Methods for Fines");
+}
