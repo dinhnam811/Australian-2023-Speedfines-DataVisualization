@@ -17,7 +17,6 @@ Promise.all([
     allData.line = line;
     allData.pie = pie;
     allData.stat = stat;
-    
     drawLineChart(line); 
     drawBarChart(bar.filter(d => d.state === "VIC"));
     drawStatChart(stat); 
