@@ -1,7 +1,10 @@
-function drawTreeMap(data) {
+function drawTreeMap(data, selectedState = "VIC") {
   const width = 300;  
   const height = 200;
   const scaleFactor = 0.7; 
+
+
+  const filteredData = data.filter(d => d.jurisdiction === selectedState);
 
   d3.select("#pie-chart").selectAll("*").remove();
 
@@ -12,15 +15,13 @@ function drawTreeMap(data) {
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "xMidYMid meet");
 
-
   const chartGroup = svg.append("g")
     .attr("transform", `scale(${scaleFactor})`);
-
 
   const treemapWidth = width / scaleFactor;
   const treemapHeight = height / scaleFactor;
 
-  const root = d3.hierarchy({ children: data })
+  const root = d3.hierarchy({ children: filteredData })
     .sum(d => d.count);
 
   d3.treemap()
@@ -28,7 +29,7 @@ function drawTreeMap(data) {
     .padding(2)(root);
 
   const color = d3.scaleOrdinal()
-    .domain(data.map(d => d.method))
+    .domain(filteredData.map(d => d.method))
     .range([
       "#56B1F7", "#4E79A7", "#6BAED6", "#3182BD",
       "#08306B", "#A6CEE3", "#D2E3F3", "#9ECAE1"
@@ -45,7 +46,6 @@ function drawTreeMap(data) {
     .style("pointer-events", "none")
     .style("font-size", "12px");
 
-  
   chartGroup.selectAll("rect")
     .data(root.leaves())
     .enter()
@@ -81,5 +81,12 @@ function drawTreeMap(data) {
     .attr("text-anchor", "middle")
     .style("font-size", "13px")
     .style("font-weight", "bold")
-    .text("Detection Methods for Fines");
+    .text(`Detection Methods for ${selectedState}`);
+}
+
+// Thêm hàm update để có thể gọi từ bên ngoài
+function updateTreeMap(selectedState) {
+  if (typeof allData !== 'undefined' && allData.pie) {
+    drawTreeMap(allData.pie, selectedState);
+  }
 }

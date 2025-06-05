@@ -47,7 +47,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
   
   const defs = svg.append("defs");
   
-  // Định nghĩa marker mũi tên trước
+  
   defs.append("marker")
     .attr("id", "arrowhead")
     .attr("viewBox", "0 -5 10 10")
@@ -65,7 +65,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
   const legendHeight = 200;
   const legendPosition = { x: 80, y: height/2 - legendHeight/2 };
 
-  // Gradient cho legend
+ 
   const linearGradient = defs.append("linearGradient")
     .attr("id", "population-gradient")
     .attr("x1", "0%")
@@ -79,7 +79,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       .attr("stop-color", d3.interpolateBlues(value));
   });
 
-  // Vẽ legend
+
   svg.append("rect")
     .attr("x", legendPosition.x)
     .attr("y", legendPosition.y)
@@ -140,6 +140,9 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       if (typeof updateStatsForState === 'function') {
         updateStatsForState(selectedState);
       }
+      if (typeof updateTreeMap === 'function') {
+        updateTreeMap(selectedState);
+      }
 
       mapGroup.selectAll("path").attr("opacity", 0.3);
       d3.select(event.currentTarget).attr("opacity", 1);
@@ -193,7 +196,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       .attr("stroke-width", 2)
       .attr("stroke-dasharray", "5,3");
 
-    // Thêm ACT phóng to
+  
     const enlargedACT = actGroup.append("path")
       .datum(actFeature)
       .attr("class", "act-enlarged")
@@ -204,7 +207,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       .attr("opacity", 1)
       .style("cursor", "pointer")
       .on("click", (event) => {
-        console.log("Enlarged ACT clicked!"); // Debug log
+        console.log("Enlarged ACT clicked!"); 
         
         if (typeof updateBarChart === 'function') {
           const year = +document.getElementById("year-filter").value || 2023;
@@ -213,6 +216,9 @@ d3.json("js/australia-map.geo.json").then(geoData => {
         
         if (typeof updateStatsForState === 'function') {
           updateStatsForState("ACT");
+        }
+        if (typeof updateTreeMap === 'function') {
+          updateTreeMap("ACT");
         }
         
         mapGroup.selectAll("path").attr("opacity", 0.3);

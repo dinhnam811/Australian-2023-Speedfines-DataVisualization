@@ -1,0 +1,37 @@
+"JURISDICTION","DETECTION_METHOD","Count(New Column)"
+"ACT","Fixed camera",61
+"ACT","Fixed or mobile camera",12
+"ACT","Mobile camera",59
+"ACT","Police issued",41
+"NSW","Fixed camera",12
+"NSW","Fixed or mobile camera",15
+"NSW","Mobile camera",12
+"NSW","Police issued",253
+"NSW","Red light camera",12
+"NT","Fixed or mobile camera",15
+"NT","Mobile camera",65
+"NT","Police issued",58
+"NT","Red light camera",58
+"QLD","Average speed camera",1
+"QLD","Fixed camera",1
+"QLD","Fixed or mobile camera",15
+"QLD","Mobile camera",1
+"QLD","Police issued",6
+"SA","Fixed camera",63
+"SA","Fixed or mobile camera",15
+"SA","Mobile camera",63
+"SA","Other",9
+"SA","Police issued",63
+"TAS","Fixed or mobile camera",70
+"TAS","Police issued",58
+"VIC","Fixed camera",213
+"VIC","Fixed or mobile camera",15
+"VIC","Mobile camera",240
+"VIC","Police issued",219
+"WA","Average speed camera",50
+"WA","Fixed camera",58
+"WA","Fixed or mobile camera",15
+"WA","Mobile camera",62
+"WA","Police issued",56
+"WA","Red light camera",55
+"WA","Unknown",47
