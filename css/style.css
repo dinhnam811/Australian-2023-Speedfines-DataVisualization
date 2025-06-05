@@ -115,3 +115,44 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+#stat-chart {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: #f9fbfc;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+#stat-chart > div {
+  flex: 1 1 180px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: inset 0 0 0 1px #d9e2ec;
+  transition: all 0.2s ease;
+}
+
+#stat-chart > div:hover {
+  box-shadow: inset 0 0 0 2px #0077b6;
+  background-color: #f1faff;
+}
+
+#stat-chart span {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0.3rem;
+  color: #1d3557;
+}
+
