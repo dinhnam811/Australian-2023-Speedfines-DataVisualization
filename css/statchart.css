@@ -27,23 +27,13 @@
     color: #e74c3c;
     margin: 15px 0;
 }
-
-#stat-chart div:not(:first-child):not(:nth-child(2)) {
-    display: flex;
-    justify-content: space-between;
+#stat-chart div:nth-child(3) {
     font-size: 18px;
-    color: #e74c3c;
     font-weight: bold;
+    color: #e74c3c;
+    margin: 15px 0;
 }
 
-#stat-chart div:not(:first-child):not(:nth-child(2)) span:last-child {
-    color: #2c3e50;
-    font-weight: 600;
-}
 
-#stat-chart div:nth-child(4),
-#stat-chart div:nth-child(6) {
-    padding-top: 10px;
-    border-top: 1px dashed #eee;
-    margin-top: 10px;
-}
+
+
