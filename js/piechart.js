@@ -1,10 +1,13 @@
 function drawTreeMap(data) {
-  const width = 300;  
-  const height = 200;
-  const scaleFactor = 0.7; 
+  const width = 370;
+  const height = 250;
+  const scaleFactor = 0.85;
 
+  // Clear previous chart and tooltip
   d3.select("#pie-chart").selectAll("*").remove();
+  d3.selectAll(".tooltip-treemap").remove();
 
+  // Create SVG
   const svg = d3.select("#pie-chart")
     .append("svg")
     .attr("width", width)
@@ -12,21 +15,21 @@ function drawTreeMap(data) {
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "xMidYMid meet");
 
-
   const chartGroup = svg.append("g")
-    .attr("transform", `scale(${scaleFactor})`);
-
+    .attr("transform", `translate(0,20) scale(${scaleFactor})`);
 
   const treemapWidth = width / scaleFactor;
-  const treemapHeight = height / scaleFactor;
+  const treemapHeight = (height - 20) / scaleFactor;
 
-  const root = d3.hierarchy({ children: data })
-    .sum(d => d.count);
+  // Create root node
+  const root = d3.hierarchy({ children: data }).sum(d => d.count);
 
+  // Create treemap layout
   d3.treemap()
-    .size([treemapWidth, treemapHeight]) 
+    .size([treemapWidth, treemapHeight])
     .padding(2)(root);
 
+  // Define color scale
   const color = d3.scaleOrdinal()
     .domain(data.map(d => d.method))
     .range([
@@ -34,8 +37,9 @@ function drawTreeMap(data) {
       "#08306B", "#A6CEE3", "#D2E3F3", "#9ECAE1"
     ]);
 
+  // Tooltip styling
   const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
+    .attr("class", "tooltip-treemap")
     .style("position", "absolute")
     .style("opacity", 0)
     .style("background-color", "#08306B")
@@ -45,7 +49,7 @@ function drawTreeMap(data) {
     .style("pointer-events", "none")
     .style("font-size", "12px");
 
-  
+  // Draw rectangles
   chartGroup.selectAll("rect")
     .data(root.leaves())
     .enter()
@@ -55,31 +59,41 @@ function drawTreeMap(data) {
     .attr("width", d => d.x1 - d.x0)
     .attr("height", d => d.y1 - d.y0)
     .attr("fill", d => color(d.data.method))
-    .on("mouseover", function(event, d) {
+    .on("mouseover", function (event, d) {
       tooltip.style("opacity", 1)
         .html(`<strong>${d.data.method}</strong><br>Count: ${d.data.count}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 28) + "px");
     })
-    .on("mouseout", function() {
+    .on("mousemove", function (event) {
+      tooltip
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
+    })
+    .on("mouseout", function () {
       tooltip.style("opacity", 0);
     });
 
+  // Draw text labels
   chartGroup.selectAll("text")
     .data(root.leaves())
     .enter()
     .append("text")
     .attr("x", d => d.x0 + 4)
     .attr("y", d => d.y0 + 14)
-    .text(d => d.data.method)
+    .text(d => {
+      const boxWidth = d.x1 - d.x0;
+      return boxWidth > 50 ? d.data.method : "";  // hide text if too narrow
+    })
     .style("font-size", "10px")
     .style("fill", "white");
 
-  chartGroup.append("text")
-    .attr("x", treemapWidth / 2)
+  // Title
+  svg.append("text")
+    .attr("x", width / 2)
     .attr("y", 15)
     .attr("text-anchor", "middle")
-    .style("font-size", "13px")
+    .style("font-size", "14px")
     .style("font-weight", "bold")
     .text("Detection Methods for Fines");
 }
