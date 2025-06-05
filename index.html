@@ -15,54 +15,31 @@
       <h1>Speeding Dashboard</h1>
       <div class="filters">
       
-
-        <select id="month-filter" name="month">
-          <option value="">Select Month</option>
-          <option>January</option>
-          <option>February</option>
-          <option>March</option>
-          <option>April</option>
-          <option>May</option>
-          <option>June</option>
-          <option>July</option>
-          <option>August</option>
-          <option>September</option>
-          <option>October</option>
-          <option>November</option>
-          <option>December</option>
-        </select>
-
-       
         <select id="year-filter" name="year">
-          <option value="">Select Year</option>
-          <option value="2008">2008</option>
-          <option value="2009">2009</option>
-          <option value="2010">2010</option>
-          <option value="2011">2011</option>
-          <option value="2012">2012</option>
-          <option value="2013">2013</option>
-          <option value="2014">2014</option>
-          <option value="2015">2015</option>
-          <option value="2016">2016</option>
-          <option value="2017">2017</option>
-          <option value="2018">2018</option>
-          <option value="2019">2019</option>
-          <option value="2020">2020</option>
-          <option value="2021">2021</option>
-          <option value="2022">2022</option>
           <option value="2023" selected>2023</option>
         </select>
       </div>
+      
     </div>
 
-    <div class="charts">
-      <div class="chart-box" id="stat-chart"></div>
-      <div class="chart-box" id="bar-chart"></div>
-      <div class="chart-box" id="pie-chart"></div>
-      <div class="chart-box" id="map-chart"></div>
-      <div class="chart-box" id="line-chart"></div>
-      <div class="chart-box" id="stat-chart"></div>
+    <div class="top-section">
+      <div class="left-column">
+        <div class="chart-box medium" id="pie-chart"></div>
+        <div class="chart-box medium" id="bar-chart"></div>
+      </div>
+
+      <div class="right-column">
+        <div class="chart-box small" id="stat-chart"></div>
+        <div class="chart-box large" id="map-chart"></div>
+      </div>
     </div>
+
+    <div class="bottom-section">
+      <div class="chart-box medium" id="line-chart"></div>
+      <div class="chart-box medium" id="monthly-chart"></div>
+    </div>
+  </div>
+
   </div>
 
   <script src="js/piechart.js"></script>
