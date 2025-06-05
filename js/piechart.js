@@ -61,6 +61,7 @@ function drawTreeMap(data, selectedState = "VIC") {
       .append("rect")
       .attr("x", d => d.x0)
       .attr("y", d => d.y0)
+      .attr("rx", 4) 
       .attr("width", 0)
       .attr("height", 0)
       .attr("fill", d => getColor(d.data.method))
