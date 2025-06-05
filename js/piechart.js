@@ -1,11 +1,10 @@
-
 function drawTreeMap(data, selectedState = "VIC") {
   const width = 300;
   const height = 200;
   const scaleFactor = 0.7;
   const filteredData = data.filter(d => d.jurisdiction === selectedState);
   
- 
+  // Clear existing content
   d3.select("#pie-chart").selectAll("*").remove();
   
   const svg = d3.select("#pie-chart")
@@ -56,21 +55,19 @@ function drawTreeMap(data, selectedState = "VIC") {
       .style("pointer-events", "none")
       .style("font-size", "12px");
   
-  
+  // Create rectangles with transitions
   const rects = chartGroup.selectAll("rect")
       .data(root.leaves())
       .enter()
       .append("rect")
       .attr("x", d => d.y0)
       .attr("y", d => d.x0)
-      .attr("width", 0) 
-      .attr("height", 0)
-      .attr("rx", 4) 
-    .attr("ry", 4) 
+      .attr("width", 0) // Start with width 0
+      .attr("height", 0) // Start with height 0
       .attr("fill", d => getColor(d.data.method))
-      .style("opacity", 0) 
+      .style("opacity", 0) // Start invisible
       .on("mouseover", function(event, d) {
-         
+          // Add hover effect with transition
           d3.select(this)
               .transition()
               .duration(200)
@@ -82,7 +79,7 @@ function drawTreeMap(data, selectedState = "VIC") {
               .style("top", (event.pageY - 28) + "px");
       })
       .on("mouseout", function() {
-         
+          // Remove hover effect with transition
           d3.select(this)
               .transition()
               .duration(200)
@@ -91,16 +88,16 @@ function drawTreeMap(data, selectedState = "VIC") {
           tooltip.style("opacity", 0);
       });
   
-
+  // Animate rectangles into position
   rects.transition()
       .duration(800)
-      .delay((d, i) => i * 100) 
+      .delay((d, i) => i * 100) // Stagger the animations
       .ease(d3.easeBackOut)
       .attr("width", d => d.y1 - d.y0)
       .attr("height", d => d.x1 - d.x0)
       .style("opacity", 1);
   
- 
+  // Create text labels with transitions
   const labels = chartGroup.selectAll("text.label")
       .data(root.leaves())
       .enter()
@@ -113,37 +110,38 @@ function drawTreeMap(data, selectedState = "VIC") {
       .style("fill", "white")
       .style("text-anchor", "start")
       .style("dominant-baseline", "middle")
-      .style("opacity", 0); 
+      .style("opacity", 0); // Start invisible
   
- 
+  // Animate text labels to appear after rectangles
   labels.transition()
       .duration(600)
-      .delay(600) 
+      .delay(600) // Wait for rectangles to mostly appear
       .ease(d3.easeQuadOut)
       .style("opacity", 1);
   
-  
+  // Add title with transition
   const title = chartGroup.append("text")
       .attr("class", "title")
       .attr("x", treemapWidth / 2)
-      .attr("y", -9)
+      .attr("y", 10)
       .attr("text-anchor", "middle")
       .style("font-size", "18px")
       .style("font-weight", "bold")
-      .style("opacity", 0) 
       .text(`Detection Methods for ${selectedState}`)
-      .transition()
-      .duration(600)
-      .delay(600)
-      .style("opacity", 1);
-  
-  
+      .style("opacity", 0) // Start invisible
+      .attr("transform", "translate(0, -20)"); 
+      
 
+  title.transition()
+      .duration(600)
+      .delay(400)
+      .ease(d3.easeQuadOut)
+      .style("opacity", 1)
+      .attr("transform", "translate(0, 0)");
 }
 
 function updateTreeMap(selectedState) {
   if (typeof allData !== 'undefined' && allData.pie) {
-      
       const currentChart = d3.select("#pie-chart svg");
       if (!currentChart.empty()) {
           currentChart.transition()
@@ -151,7 +149,6 @@ function updateTreeMap(selectedState) {
               .style("opacity", 0)
               .on("end", function() {
                   drawTreeMap(allData.pie, selectedState);
-                  
                   d3.select("#pie-chart svg")
                       .style("opacity", 0)
                       .transition()
@@ -163,104 +160,3 @@ function updateTreeMap(selectedState) {
       }
   }
 }
-=======
-function drawTreeMap(data) {
-  const width = 370;
-  const height = 250;
-  const scaleFactor = 0.85;
-
-  // Clear previous chart and tooltip
-  d3.select("#pie-chart").selectAll("*").remove();
-  d3.selectAll(".tooltip-treemap").remove();
-
-  // Create SVG
-  const svg = d3.select("#pie-chart")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMidYMid meet");
-
-  const chartGroup = svg.append("g")
-    .attr("transform", `translate(0,20) scale(${scaleFactor})`);
-
-  const treemapWidth = width / scaleFactor;
-  const treemapHeight = (height - 20) / scaleFactor;
-
-  // Create root node
-  const root = d3.hierarchy({ children: data }).sum(d => d.count);
-
-  // Create treemap layout
-  d3.treemap()
-    .size([treemapWidth, treemapHeight])
-    .padding(2)(root);
-
-  // Define color scale
-  const color = d3.scaleOrdinal()
-    .domain(data.map(d => d.method))
-    .range([
-      "#56B1F7", "#4E79A7", "#6BAED6", "#3182BD",
-      "#08306B", "#A6CEE3", "#D2E3F3", "#9ECAE1"
-    ]);
-
-  // Tooltip styling
-  const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip-treemap")
-    .style("position", "absolute")
-    .style("opacity", 0)
-    .style("background-color", "#08306B")
-    .style("color", "white")
-    .style("padding", "6px 10px")
-    .style("border-radius", "4px")
-    .style("pointer-events", "none")
-    .style("font-size", "12px");
-
-  // Draw rectangles
-  chartGroup.selectAll("rect")
-    .data(root.leaves())
-    .enter()
-    .append("rect")
-    .attr("x", d => d.x0)
-    .attr("y", d => d.y0)
-    .attr("width", d => d.x1 - d.x0)
-    .attr("height", d => d.y1 - d.y0)
-    .attr("fill", d => color(d.data.method))
-    .on("mouseover", function (event, d) {
-      tooltip.style("opacity", 1)
-        .html(`<strong>${d.data.method}</strong><br>Count: ${d.data.count}`)
-        .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY - 28) + "px");
-    })
-    .on("mousemove", function (event) {
-      tooltip
-        .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY - 28) + "px");
-    })
-    .on("mouseout", function () {
-      tooltip.style("opacity", 0);
-    });
-
-  // Draw text labels
-  chartGroup.selectAll("text")
-    .data(root.leaves())
-    .enter()
-    .append("text")
-    .attr("x", d => d.x0 + 4)
-    .attr("y", d => d.y0 + 14)
-    .text(d => {
-      const boxWidth = d.x1 - d.x0;
-      return boxWidth > 50 ? d.data.method : "";  // hide text if too narrow
-    })
-    .style("font-size", "10px")
-    .style("fill", "white");
-
-  // Title
-  svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", 15)
-    .attr("text-anchor", "middle")
-    .style("font-size", "14px")
-    .style("font-weight", "bold")
-    .text("Detection Methods for Fines");
-}
-
