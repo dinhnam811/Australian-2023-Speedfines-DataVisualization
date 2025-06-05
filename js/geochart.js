@@ -17,7 +17,6 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     feature.properties.state = stateCodeToAbbr[feature.properties.STATE_CODE];
   });
 
-  
   const projection = d3.geoMercator()
     .fitSize([450, 400], geoData);
   const path = d3.geoPath().projection(projection);
@@ -28,7 +27,6 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     .attr("preserveAspectRatio", "xMidYMid meet")
     .style("width", "100%")
     .style("height", "100%");
-
 
   const populationData = {
     "NSW": 8166000, "VIC": 6681000, "QLD": 5185000,
@@ -44,10 +42,20 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     feature.properties.population = populationData[feature.properties.state] || 0;
   });
 
-  
+  const tooltip = d3.select("body").append("div")
+    .attr("class", "map-tooltip")
+    .style("position", "absolute")
+    .style("opacity", 0)
+    .style("background-color", "rgba(0, 0, 0, 0.8)")
+    .style("color", "white")
+    .style("padding", "10px")
+    .style("border-radius", "5px")
+    .style("pointer-events", "none")
+    .style("font-size", "12px")
+    .style("box-shadow", "0 2px 10px rgba(0,0,0,0.3)");
+
   const defs = svg.append("defs");
   
-  // Định nghĩa marker mũi tên trước
   defs.append("marker")
     .attr("id", "arrowhead")
     .attr("viewBox", "0 -5 10 10")
@@ -60,12 +68,10 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     .attr("d", "M0,-5L10,0L0,5")
     .attr("fill", "#d62728");
 
-  // ========= LEGEND =========
   const legendWidth = 20;
   const legendHeight = 200;
   const legendPosition = { x: 80, y: height/2 - legendHeight/2 };
 
-  // Gradient cho legend
   const linearGradient = defs.append("linearGradient")
     .attr("id", "population-gradient")
     .attr("x1", "0%")
@@ -79,7 +85,6 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       .attr("stop-color", d3.interpolateBlues(value));
   });
 
-  // Vẽ legend
   svg.append("rect")
     .attr("x", legendPosition.x)
     .attr("y", legendPosition.y)
@@ -111,15 +116,13 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     .style("font-weight", "bold")
     .text("Population");
 
-  // ========= MAIN MAP =========
   const mapGroup = svg.append("g")
     .attr("transform", `translate(150, 50)`);
 
-  
   const actFeature = geoData.features.find(f => f.properties.state === "ACT");
   console.log("ACT Feature found:", actFeature); 
 
-  mapGroup.selectAll("path")
+  const states = mapGroup.selectAll("path")
     .data(geoData.features)
     .enter()
     .append("path")
@@ -128,10 +131,11 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     .attr("stroke", "#333")
     .attr("stroke-width", 0.5)
     .attr("opacity", 1)
+    .style("cursor", "pointer")
+    .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))")
     .on("click", (event, d) => {
       const selectedState = d.properties.state;
       
-  
       if (typeof updateBarChart === 'function') {
         const year = +document.getElementById("year-filter").value;
         updateBarChart(selectedState, year);
@@ -140,24 +144,73 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       if (typeof updateStatsForState === 'function') {
         updateStatsForState(selectedState);
       }
+      if (typeof updateTreeMap === 'function') {
+        updateTreeMap(selectedState);
+      }
 
-      mapGroup.selectAll("path").attr("opacity", 0.3);
-      d3.select(event.currentTarget).attr("opacity", 1);
+      mapGroup.selectAll("path")
+        .transition()
+        .duration(300)
+        .attr("opacity", 0.3)
+        .style("filter", "drop-shadow(0 1px 2px rgba(0,0,0,0.1))");
       
+      d3.select(event.currentTarget)
+        .transition()
+        .duration(300)
+        .attr("opacity", 1)
+        .style("filter", "drop-shadow(0 4px 8px rgba(0,0,0,0.3))");
       
       if (selectedState === "ACT") {
-        svg.select(".act-enlarged").attr("stroke-width", 3);
+        svg.select(".act-enlarged")
+          .transition()
+          .duration(300)
+          .attr("stroke-width", 3)
+          .style("filter", "drop-shadow(0 4px 8px rgba(0,0,0,0.3))");
       } else {
-        svg.select(".act-enlarged").attr("stroke-width", 2);
+        svg.select(".act-enlarged")
+          .transition()
+          .duration(300)
+          .attr("stroke-width", 2)
+          .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
       }
     })
     .on("mouseover", function(event, d) {
-      d3.select(this).attr("stroke-width", 2);
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr("stroke-width", 2)
+        .style("filter", "drop-shadow(0 4px 8px rgba(0,0,0,0.2))")
+        .attr("transform", "scale(1.02)");
+      
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 1);
+      
+      tooltip.html(`
+        <strong>${d.properties.state}</strong><br>
+        Population: ${d3.format(",")(d.properties.population)}<br>
+        Click to view details
+      `)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 10) + "px");
     })
     .on("mouseout", function() {
-      d3.select(this).attr("stroke-width", 0.5);
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr("stroke-width", 0.5)
+        .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))")
+        .attr("transform", "scale(1)");
+      
+      tooltip.transition()
+        .duration(300)
+        .style("opacity", 0);
+    })
+    .on("mousemove", function(event) {
+      tooltip
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 10) + "px");
     });
-
 
   if (actFeature) {
     console.log("Creating enlarged ACT..."); 
@@ -165,12 +218,10 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     const actCentroid = d3.geoCentroid(actFeature);
     console.log("ACT Centroid:", actCentroid); 
     
-    
     const enlargedACTPosition = {
       x: width + 140,
       y: 350
     };
-    
     
     const actProjection = d3.geoMercator()
       .center(actCentroid)
@@ -179,11 +230,9 @@ d3.json("js/australia-map.geo.json").then(geoData => {
 
     const actPath = d3.geoPath().projection(actProjection);
 
-   
     const actGroup = svg.append("g")
       .attr("class", "act-enlarged-group");
 
-   
     actGroup.append("circle")
       .attr("cx", enlargedACTPosition.x)
       .attr("cy", enlargedACTPosition.y)
@@ -191,9 +240,9 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       .attr("fill", "rgba(255,255,255,0.9)")
       .attr("stroke", "#333")
       .attr("stroke-width", 2)
-      .attr("stroke-dasharray", "5,3");
+      .attr("stroke-dasharray", "5,3")
+      .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
 
-    // Thêm ACT phóng to
     const enlargedACT = actGroup.append("path")
       .datum(actFeature)
       .attr("class", "act-enlarged")
@@ -203,8 +252,9 @@ d3.json("js/australia-map.geo.json").then(geoData => {
       .attr("stroke-width", 2)
       .attr("opacity", 1)
       .style("cursor", "pointer")
+      .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))")
       .on("click", (event) => {
-        console.log("Enlarged ACT clicked!"); // Debug log
+        console.log("Enlarged ACT clicked!"); 
         
         if (typeof updateBarChart === 'function') {
           const year = +document.getElementById("year-filter").value || 2023;
@@ -214,54 +264,104 @@ d3.json("js/australia-map.geo.json").then(geoData => {
         if (typeof updateStatsForState === 'function') {
           updateStatsForState("ACT");
         }
+        if (typeof updateTreeMap === 'function') {
+          updateTreeMap("ACT");
+        }
         
-        mapGroup.selectAll("path").attr("opacity", 0.3);
-        d3.select(event.currentTarget).attr("stroke-width", 3);
+        mapGroup.selectAll("path")
+          .transition()
+          .duration(300)
+          .attr("opacity", 0.3)
+          .style("filter", "drop-shadow(0 1px 2px rgba(0,0,0,0.1))");
+        
+        d3.select(event.currentTarget)
+          .transition()
+          .duration(300)
+          .attr("stroke-width", 3)
+          .style("filter", "drop-shadow(0 4px 8px rgba(0,0,0,0.3))");
       })
-      .on("mouseover", function() {
-        d3.select(this).attr("stroke-width", 3);
+      .on("mouseover", function(event) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("stroke-width", 3)
+          .style("filter", "drop-shadow(0 4px 8px rgba(0,0,0,0.2))")
+          .attr("transform", "scale(1.05)");
+        
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", 1);
+        
+        tooltip.html(`
+          <strong>ACT (Enlarged)</strong><br>
+          Population: ${d3.format(",")(actFeature.properties.population)}<br>
+          Scale: 15x original size<br>
+          Click to view details
+        `)
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 10) + "px");
       })
       .on("mouseout", function() {
-        d3.select(this).attr("stroke-width", 2);
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("stroke-width", 2)
+          .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))")
+          .attr("transform", "scale(1)");
+        
+        tooltip.transition()
+          .duration(300)
+          .style("opacity", 0);
+      })
+      .on("mousemove", function(event) {
+        tooltip
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 10) + "px");
       });
 
-    console.log("Enlarged ACT created:", enlargedACT.node()); // Debug log
+    console.log("Enlarged ACT created:", enlargedACT.node());
 
-    // Thêm nhãn rõ ràng hơn
     actGroup.append("text")
       .attr("x", enlargedACTPosition.x)
-      .attr("y", enlargedACTPosition.y + 80)
+      .attr("y", enlargedACTPosition.y + 40)
       .attr("text-anchor", "middle")
       .style("font-size", "12px")
       .style("font-weight", "bold")
       .style("fill", "#333")
       .text("ACT (Enlarged 15x)");
 
-    // Thêm mũi tên chỉ dẫn từ ACT gốc đến ACT phóng to
     const originalACTCentroid = path.centroid(actFeature);
     
     actGroup.append("line")
-      .attr("x1", originalACTCentroid[0] + 150) // +100 vì mapGroup có translate
-      .attr("y1", originalACTCentroid[1] + 50)  // +50 vì mapGroup có translate
-      .attr("x2", enlargedACTPosition.x - 50)
-      .attr("y2", enlargedACTPosition.y - 30)
+      .attr("x1", originalACTCentroid[0] + 150)
+      .attr("y1", originalACTCentroid[1] + 50)
+      .attr("x2", enlargedACTPosition.x - 10)
+      .attr("y2", enlargedACTPosition.y - 10)
       .attr("stroke", "#d62728")
       .attr("stroke-width", 2)
       .attr("stroke-dasharray", "3,3")
-      .attr("marker-end", "url(#arrowhead)");
+      .attr("marker-end", "url(#arrowhead)")
+      .style("opacity", 0.7);
 
     console.log("Arrow created from:", originalACTCentroid, "to:", enlargedACTPosition);
   } else {
     console.error("ACT feature not found!");
   }
 
-  // ========= EVENT HANDLERS =========
   d3.select("#map-chart").on("mouseleave", function() {
-    mapGroup.selectAll("path").attr("opacity", 0.6); 
+    mapGroup.selectAll("path")
+      .transition()
+      .duration(300)
+      .attr("opacity", 0.6)
+      .style("filter", "drop-shadow(0 1px 2px rgba(0,0,0,0.1))");
   });
   
   d3.select("#map-chart").on("mouseenter", function() {
-    mapGroup.selectAll("path").attr("opacity", 1);
+    mapGroup.selectAll("path")
+      .transition()
+      .duration(300)
+      .attr("opacity", 1)
+      .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
   });
   
   function updateBarChart(selectedState, year) {
@@ -275,7 +375,6 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     }
   }
   
-  // Tiêu đề
   svg.append("text")
     .attr("x", totalWidth / 2)
     .attr("y", 30)
@@ -284,7 +383,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
     .style("font-weight", "bold")
     .text("Australia Population Map with Enlarged ACT");
 
-  console.log("Map rendering completed!"); // Debug log
+  console.log("Map rendering completed!");
 }).catch(error => {
   console.error("Error loading geo data:", error);
 });
