@@ -323,7 +323,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
 
     actGroup.append("text")
       .attr("x", enlargedACTPosition.x)
-      .attr("y", enlargedACTPosition.y + 40)
+      .attr("y", enlargedACTPosition.y + 100)
       .attr("text-anchor", "middle")
       .style("font-size", "12px")
       .style("font-weight", "bold")
