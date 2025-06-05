@@ -173,6 +173,8 @@ function drawMonthlyBarChart(data, date) {
     .append("rect")
     .attr("y", d => y(d.state))
     .attr("x", 0)
+    .attr("rx", 4)
+    .attr("ry", 4)
     .attr("height", y.bandwidth())
     .attr("width", 0)
     .attr("fill", d => color(d.state))
