@@ -1,3 +1,11 @@
+const AGE_GROUP_LABELS = {
+  "Young": "17-25 y/o",
+  "Adult": "26-39 y/o" ,
+  "Mature": "40-64 y/o" ,
+  "Senior": "65 y/o and over" ,
+  "Unknown": "All ages" 
+};
+
 function drawBarChart(data) {
   const width = 370;
   const height = 300;
@@ -7,7 +15,7 @@ function drawBarChart(data) {
   d3.select("#bar-chart").selectAll("*").remove();
   d3.selectAll(".tooltip-bar").remove();
 
-  // Append tooltip to body (not SVG)
+  // Append tooltip to body
   const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip-bar")
@@ -58,7 +66,10 @@ function drawBarChart(data) {
         .duration(200)
         .style("opacity", 0.95);
 
-      tooltip.html(`<strong>${d.ageband}</strong><br>Fines: ${d3.format(",")(d.fines)}`);
+      tooltip.html(
+        `<strong>${d.ageband}</strong> (${AGE_GROUP_LABELS[d.ageband] || "Other"})<br>` +
+        `Fines: ${d3.format(",")(d.fines)}`
+      );
     })
     .on("mousemove", function(event) {
       tooltip
