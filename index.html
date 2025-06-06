@@ -12,36 +12,140 @@
 <body>
   <div class="dashboard">
     <div class="dashboard-header">
-      <h1>Speeding Dashboard</h1>
-      <div class="filters">
+      <div class="header-row">
+        <h1>Speeding Dashboard</h1>
+    
+        <div class="filters">
+          <select id="year-filter">
+            <option value="2023" selected>2023</option>
+          </select>
+        
+          <button class="toggle-btn" onclick="showSection('top', this)">Overview</button>
+          <button class="toggle-btn" onclick="showSection('bottom', this)">Trends</button>
+          <button class="toggle-btn" onclick="showSection('about', this)">About</button>
+        </div>        
+      </div>
+    </div>
+  
+    <!-- Top Section -->
+    <div id="top-section" class="section-visible">
+      <div class="top-section"> 
+        <div class="left-column">
+          <div class="chart-box small" id="stat-chart"></div>
+          <div class="chart-box large" id="map-chart"><p id="map-annotation" class="map-note"></p></div>
+        </div>
+        <div class="right-column">
+          <div class="chart-box medium" id="pie-chart"></div>
+          <div class="chart-box medium" id="bar-chart"></div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Bottom Section -->
+    <div id="bottom-section" class="section-hidden">
+      <div class="bottom-section">     
+        <div class="about-intro-card">
+          This section helps users explore the <strong>temporal and spatial distribution</strong> of speeding fines across Australian jurisdictions in 2023. Use the visualisations below to identify:
+        <ul class="trend-list">
+          <li>📊 <strong>Monthly fluctuations</strong> in fines by state (e.g. surges due to campaigns, school holidays, etc.)</li>
+          <li>🏁 <strong>State-by-state comparisons</strong> of total speeding penalties issued</li>
+          <li>⏱️ <strong>Trends in enforcement consistency</strong> across time and location</li>
+        </ul>
+        </div>
+        <div class="chart-box medium" id="line-chart"></div>
+        <div class="chart-box medium" id="monthly-chart"></div>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div id="about-section" class="section-hidden">
+      <div class="about-section">
+
+        <!-- Full-width intro card -->
+        <div class="about-intro-card">
+          <h2>🚗 About the Dashboard</h2>
+          <p>This project presents an <strong>interactive web-based dashboard</strong> that visualizes <strong>speeding fines data across Australian states and territories in 2023</strong>. Its core aim is to convert large volumes of enforcement records into a <strong>clear, accessible, and engaging format</strong> to support public understanding and informed decision-making.</p>
+        </div>
       
-        <select id="year-filter" name="year">
-          <option value="2023" selected>2023</option>
-        </select>
+        <!-- Side-by-side card grid for the rest -->
+        <div class="about-card-grid">
+          <div class="about-card">
+            <h3>🎯 Target Audience</h3>
+            <ul>
+              <li><strong>Young drivers (18–30):</strong> Encouraged to reflect on behavior using relatable insights.</li>
+              <li><strong>Policymakers & Law Enforcement:</strong> Use data to inform enforcement strategy.</li>
+              <li><strong>General Public & Educators:</strong> Raise awareness and aid driver safety education.</li>
+              <li><strong>Journalists & Media:</strong> Extract data-driven stories and visualize key trends.</li>
+            </ul>
+          </div>
+      
+          <div class="about-card">
+            <h3>❓ Purpose of the Visualisation</h3>
+            <ul>
+              <li>Identify which states issue the most fines</li>
+              <li>Compare enforcement methods like speed cameras or police patrols</li>
+              <li>Explore age groups most affected by fines</li>
+              <li>Recognize time-based or region-specific trends</li>
+            </ul>
+          </div>
+      
+          <div class="about-card">
+            <h3>✔️ Benefits & Impact</h3>
+            <ul>
+              <li><strong>Visual clarity:</strong> Makes complex data easy to understand</li>
+              <li><strong>Behavioral insight:</strong> Encourages accountability in high-risk demographics</li>
+              <li><strong>Strategic value:</strong> Assists in evidence-based policy decisions</li>
+              <li><strong>Media & educational utility:</strong> Powers storytelling with clear data</li>
+            </ul>
+          </div>
+      
+          <div class="about-card">
+            <h3>🏎️ Speeding Fines – Data Overview</h3>
+            <ul>
+              <li>🚗 More than <strong>2.7 million speeding fines</strong> were issued nationally in 2023.</li>
+              <li>📍 VIC and NSW recorded the highest fine volumes.</li>
+              <li>👥 Young drivers (18–25) had higher proportions of camera-detected violations.</li>
+              <li>📸 Speed camera use rose 18% from pre-pandemic levels (compared to 2022).</li>
+            </ul>
+          </div>
+        </div>
+      
       </div>
+      
       
     </div>
 
-    <div class="top-section">
-      <div class="left-column">
-        <div class="chart-box medium" id="pie-chart"></div>
-        <div class="chart-box medium" id="bar-chart"></div>
-      </div>
-
-      <div class="right-column">
-        <div class="chart-box small" id="stat-chart"></div>
-        <div class="chart-box large" id="map-chart"></div>
-      </div>
-    </div>
-
-    <div class="bottom-section">
-      <div class="chart-box medium" id="line-chart"></div>
-      <div class="chart-box medium" id="monthly-chart"></div>
-    </div>
   </div>
-
-  </div>
-
+  
+  <script>
+    function showSection(section, clickedBtn) {
+      const top = document.getElementById("top-section");
+      const bottom = document.getElementById("bottom-section");
+      const about = document.getElementById("about-section");
+  
+      // Toggle visibility of sections
+      top.classList.toggle('section-visible', section === 'top');
+      top.classList.toggle('section-hidden', section !== 'top');
+  
+      bottom.classList.toggle('section-visible', section === 'bottom');
+      bottom.classList.toggle('section-hidden', section !== 'bottom');
+  
+      about.classList.toggle('section-visible', section === 'about');
+      about.classList.toggle('section-hidden', section !== 'about');
+  
+      // Remove active class from all toggle buttons
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+  
+      // Add active class to clicked button
+      if (clickedBtn) {
+        clickedBtn.classList.add('active');
+      }
+    }
+  </script>
+  
+  
   <script src="js/piechart.js"></script>
   <script src="js/geochart.js"></script>
   <script src="js/barchart.js"></script>

@@ -1,141 +1,166 @@
-/* Base Styles */
+/* === Base Styles === */
 body {
   margin: 0;
   padding: 0;
   font-family: "Roboto", "Segoe UI", sans-serif;
   background-color: #ffffff;
   color: #333;
+  overflow-x: hidden;
 }
 
 .dashboard {
-  padding: 2rem;
+  padding: 0rem 1rem 2rem 1rem;
   max-width: 1300px;
   margin: auto;
 }
 
+/* === Header === */
 .dashboard-header {
-  text-align: left;
   margin-bottom: 1.5rem;
 }
 
-.dashboard-header h1 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0;
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-/* Layout Structure */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filters select,
+.filters button {
+  padding: 1rem 2rem;
+  border: 1px solid #ccc;
+  background-color: #e8f4fa;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toggle-btn.active {
+  background-color: #1d3557;
+  color: #e8f4fa;
+  border-color: #1d3557;
+}
+
+.toggle-btn:hover {
+  background-color: #1d3557;
+  color: #fff;
+}
+
+#year-filter {
+  display: none;
+}
+
+/* === Top Section Layout === */
 .top-section {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .left-column {
-  flex: 1.5;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.right-column {
   flex: 2;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* Chart box sizes */
+.right-column {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* === Chart Boxes === */
 .chart-box {
   background-color: #fff;
   border: 1px solid #ddd;
-  padding: 1rem;
+  border-radius: 2rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
-  border-radius: 40px;
   flex-direction: column;
-  align-items: center;        /* <-- Horizontally center the SVG/chart */
-  justify-content: center;    /* <-- Vertically center the SVG/chart */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   box-sizing: border-box;
-  overflow: hidden;
-  text-align: center;         /* Ensures text like <h3> is centered */
+  width: 100%;
+  transition: transform 0.2s ease-in-out;
 }
 
-/* Optional: Adjust SVG max sizing */
+.chart-box:hover {
+  transform: translateY(-4px);
+}
+
 .chart-box svg {
   max-width: 100%;
-  max-height: 100%;
   height: auto;
 }
-
 
 .chart-box.small {
   height: 120px;
 }
 
 .chart-box.medium {
-  height: 300px;
+  flex: 1 1 48%;
+  min-width: 300px; /* ensures they stack on small screens */
 }
 
 .chart-box.large {
   height: 450px;
+  position: relative;
 }
 
-/* Bottom charts in grid layout */
-.bottom-section {
-  margin-top: 2rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 1rem;
+.map-note {
+  position: absolute;
+  bottom: 12px;
+  left: 20px;
+  font-size: 13px;
+  font-style: italic;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .top-section {
-    flex-direction: column;
-  }
-
-  .left-column,
-  .right-column {
-    flex: 1 1 100%;
-  }
-
-  .chart-box.small {
-    height: auto;
-  }
-
-  .chart-box.medium {
-    height: auto;
-  }
-
-  .chart-box.large {
-    height: auto;
-  }
-
-  .bottom-section {
-    grid-template-columns: 1fr;
-  }
+.map-note::before {
+  content: '⚠️';
+  font-style: normal;
+  font-size: 14px;
 }
 
+/* === Stat Chart Bar === */
 #stat-chart {
   display: flex;
-  justify-content: center;
-  align-items: stretch;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding: 1rem;
   background: #f9fbfc;
   border-radius: 1.5rem;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
-  font-family: "Segoe UI", sans-serif;
+  overflow-x: auto;
 }
 
 #stat-chart > div {
-  flex: 1 1 180px;
+  flex: 1 1 0;
+  min-width: 100px;
   background-color: #ffffff;
   border-radius: 1rem;
-  padding: 1.2rem 1rem;
+  padding: 1rem 0.8rem;
   text-align: center;
   font-size: 1rem;
   font-weight: 500;
@@ -148,11 +173,209 @@ body {
   background-color: #f1faff;
 }
 
-#stat-chart span {
+#stat-chart .label {
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+#stat-chart .value {
   display: block;
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
   margin-top: 0.3rem;
   color: #1d3557;
 }
 
+#stat-chart .fines-value {
+  color: #1d3557; /* Blue (keep default) */
+}
+
+#stat-chart .arrests-value,
+#stat-chart .charges-value {
+  color: #e63946; /* Red for arrests and charges */
+}
+
+/* === Section Visibility === */
+.section-visible {
+  display: block;
+}
+
+.section-hidden {
+  display: none;
+}
+
+/* === Bottom Section === */
+.bottom-section {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+}
+/* Intro full-width card */
+.about-intro-card {
+  background-color: #e3f2fd;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  color: #1d3557;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Card grid layout for sections */
+.about-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+/* Individual cards for target, purpose, etc. */
+.about-card {
+  background-color: #f9fbfc;
+  border: 1px solid #cce1f5;
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  color: #2c3e50;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.about-card h3 {
+  font-size: 1.1rem;
+  color: #1d3557;
+  margin-bottom: 0.75rem;
+}
+
+.about-card ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.about-card ul li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Reuse the same style for the data-card */
+.data-card {
+  background-color: #f1f7fc;
+  border-left: 4px solid #1d3557;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  color: #1d3557;
+}
+
+.data-card h3 {
+  margin-top: 0;
+}
+.about-section {
+  background-color: #f9fbfc;
+  padding: 2rem;
+  border-radius: 1rem;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+}
+
+.about-section h2,
+.about-section h3 {
+  color: #1d3557;
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+
+.about-section strong {
+  color: #1d3557;
+}
+
+
+.about-card {
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.about-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  
+}
+
+
+/* === Commentary (Preserved as requested) === */
+.chart-commentary {
+  flex-basis: 100%;
+  background-color: #e8f4fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  box-sizing: border-box;
+}
+
+/* === Dashboard Summary Box === */
+.dashboard-summary {
+  width: 100%;
+  margin: 0.5rem auto 1rem;
+  padding: 1rem 1.5rem;
+  background-color: #f1f7fc;
+  border-left: 5px solid #1d3557;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2c3e50;
+}
+
+/* === Responsive Layouts === */
+@media (max-width: 768px) {
+  .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .filters button {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .top-section {
+    flex-direction: column;
+  }
+
+  .left-column,
+  .right-column {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .bottom-section {
+    flex-direction: column;
+  }
+
+  .chart-box.small,
+  .chart-box.medium,
+  .chart-box.large {
+    width: 100%;
+    height: auto;
+  }
+
+  #stat-chart {
+    flex-direction: row;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  #stat-chart > div {
+    flex: 0 0 auto;
+    min-width: 120px;
+  }
+
+  .dashboard-summary,
+  .chart-commentary {
+    font-size: 0.95rem;
+    padding: 1rem;
+  }
+}

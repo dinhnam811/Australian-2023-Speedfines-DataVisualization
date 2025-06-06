@@ -1,8 +1,8 @@
 // Full D3.js script with default total fines per state and dynamic updates
 function drawLineChart(data) {
-  const margin = { top: 50, right: 130, bottom: 40, left: 60 };
-  const width = 400 - margin.left - margin.right;
-  const height = 300 - margin.top - margin.bottom;
+  const margin = { top: 50, right: 180, bottom: 50, left: 70 };
+  const width = 600 - margin.left - margin.right;
+  const height = 350 - margin.top - margin.bottom;
 
   d3.select("#line-chart").selectAll("*").remove();
   d3.selectAll(".tooltip-linechart").remove();
@@ -14,6 +14,7 @@ function drawLineChart(data) {
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
+
 
   const states = [...new Set(data.map(d => d.state))];
 

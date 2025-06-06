@@ -11,8 +11,8 @@ function drawTreeMap(data, selectedState = "VIC") {
     const svg = d3.select("#pie-chart")
       .append("svg")
       .attr("width", width)
-      .attr("height", height + 20)  // add padding for title
-      .attr("viewBox", `0 0 ${width} ${height + 20}`)
+      .attr("height", height +100) // extra space for legend
+      .attr("viewBox", `0 0 ${width} ${height + 80}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
   
     const chartGroup = svg.append("g")
@@ -30,18 +30,30 @@ function drawTreeMap(data, selectedState = "VIC") {
       .padding(2)
       .tile(d3.treemapSquarify.ratio(1.3))(root);
   
+    // Color and acronym mappings
     const colorMapping = {
-      "Police issued": "#CD5656",
-      "Other": "#EFE4D2",
-      "Unknown": "#954C2E",
-      "Fixed or mobile camera": "#0A2E5E",
-      "Fixed camera": "#FADA7A",
-      "Red light camera": "#3182bd",
-      "Mobile camera": "#B1C29E",
-      "Average speed camera": "#6A42C2"
+      "Fixed or mobile camera": "#4E79A7",
+      "Red light camera": "#F28E2B",
+      "Mobile camera": "#E15759",
+      "Average speed camera": "#76B7B2",
+      "Fixed camera": "#59A14F",
+      "Police issued": "#EDC948",
+      "Other": "#B07AA1",
+      "Unknown": "#9C755F"
     };
   
-    const getColor = (method) => colorMapping[method] || "#6BAED6";
+    const methodAcronyms = {
+      "Fixed or mobile camera": "FMC",
+      "Red light camera": "RLC",
+      "Mobile camera": "MC",
+      "Average speed camera": "ASC",
+      "Fixed camera": "FC",
+      "Police issued": "PI",
+      "Other": "OT",
+      "Unknown": "UNK"
+    };
+  
+    const getColor = method => colorMapping[method] || "#BAB0AC";
   
     const tooltip = d3.select("body").append("div")
       .attr("class", "tooltip-treemap")
@@ -97,7 +109,7 @@ function drawTreeMap(data, selectedState = "VIC") {
       .attr("height", d => d.y1 - d.y0)
       .style("opacity", 1);
   
-    // Labels
+    // Acronym labels
     const labels = chartGroup.selectAll("text.label")
       .data(root.leaves())
       .enter()
@@ -105,7 +117,7 @@ function drawTreeMap(data, selectedState = "VIC") {
       .attr("class", "label")
       .attr("x", d => d.x0 + 4)
       .attr("y", d => d.y0 + 12)
-      .text(d => d.data.method)
+      .text(d => methodAcronyms[d.data.method] || d.data.method)
       .style("font-size", "10px")
       .style("fill", "white")
       .style("opacity", 0);
@@ -129,7 +141,35 @@ function drawTreeMap(data, selectedState = "VIC") {
       .duration(600)
       .delay(400)
       .style("opacity", 1);
+  
+    // Legend
+    const legend = svg.append("g")
+      .attr("transform", `translate(10, ${height + 40})`);
+  
+    const legendItems = Object.entries(methodAcronyms);
+  
+    legend.selectAll("g")
+      .data(legendItems)
+      .enter()
+      .append("g")
+      .attr("transform", (d, i) => `translate(${(i % 2) * 160}, ${Math.floor(i / 2) * 18})`) // 2 per row
+      .each(function (d) {
+        d3.select(this)
+          .append("rect")
+          .attr("width", 10)
+          .attr("height", 10)
+          .attr("fill", getColor(d[0]));
+  
+        d3.select(this)
+          .append("text")
+          .attr("x", 15)
+          .attr("y", 9)
+          .text(`${d[1]} = ${d[0]}`)
+          .style("font-size", "10px")
+          .style("fill", "#333");
+      });
   }
+  
   function updateTreeMap(selectedState) {
     if (typeof allData !== 'undefined' && allData.pie) {
         const currentChart = d3.select("#pie-chart svg");
