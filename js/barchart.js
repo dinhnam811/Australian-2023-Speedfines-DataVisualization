@@ -5,11 +5,12 @@ function drawBarChart(data) {
 
   // Clear existing chart
   d3.select("#bar-chart").selectAll("*").remove();
-  d3.selectAll(".tooltip-bar").remove(); // Just in case
+  d3.selectAll(".tooltip-bar").remove();
 
-  const tooltip = d3.select("#bar-chart")
+  // Append tooltip to body (not SVG)
+  const tooltip = d3.select("body")
     .append("div")
-    .attr("class", "tooltip")
+    .attr("class", "tooltip-bar")
     .style("position", "absolute")
     .style("opacity", 0)
     .style("background-color", "#08306B")
@@ -34,37 +35,34 @@ function drawBarChart(data) {
     .domain([0, d3.max(data, d => d.fines)]).nice()
     .range([height - margin.bottom, margin.top]);
 
+  // Draw bars
   svg.append("g")
     .selectAll("rect")
     .data(data)
     .join("rect")
     .attr("x", d => x(d.ageband))
-    .attr("y", y(0)) 
+    .attr("y", y(0))
     .attr("height", 0)
     .attr("width", x.bandwidth())
-    .attr("rx", 4) 
+    .attr("rx", 4)
     .attr("ry", 4)
     .attr("fill", "#6baed6")
-    .transition() 
-    .duration(800)
-    .ease(d3.easeBackOut.overshoot(1.2)) 
-    .attr("y", d => y(d.fines))
-    .attr("height", d => y(0) - y(d.fines));
-
-  svg.selectAll("rect")
     .on("mouseover", function(event, d) {
       d3.select(this)
         .transition()
         .duration(200)
         .ease(d3.easeQuadOut)
         .attr("fill", "#3182bd");
-      
+
       tooltip.transition()
         .duration(200)
-        .style("opacity", .9);
-      
-      tooltip.html(`Age Group: ${d.ageband}<br/>Fines: ${d3.format(",")(d.fines)}`)
-        .style("left", (event.pageX + 10) + "px")
+        .style("opacity", 0.95);
+
+      tooltip.html(`<strong>${d.ageband}</strong><br>Fines: ${d3.format(",")(d.fines)}`);
+    })
+    .on("mousemove", function(event) {
+      tooltip
+        .style("left", (event.pageX + 12) + "px")
         .style("top", (event.pageY - 28) + "px");
     })
     .on("mouseout", function() {
@@ -73,35 +71,43 @@ function drawBarChart(data) {
         .duration(300)
         .ease(d3.easeQuadOut)
         .attr("fill", "#6baed6");
-      
-      tooltip.transition()
-        .duration(500)
-        .style("opacity", 0);
-    });
 
+      tooltip.transition()
+        .duration(400)
+        .style("opacity", 0);
+    })
+    .transition()
+    .duration(800)
+    .ease(d3.easeBackOut.overshoot(1.2))
+    .attr("y", d => y(d.fines))
+    .attr("height", d => y(0) - y(d.fines));
+
+  // X Axis
   const xAxis = svg.append("g")
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .style("opacity", 0)
     .call(d3.axisBottom(x));
-  
+
   xAxis.selectAll("text")
     .style("text-anchor", "middle");
-  
+
   xAxis.transition()
     .duration(600)
     .delay(400)
     .style("opacity", 1);
 
+  // Y Axis
   const yAxis = svg.append("g")
     .attr("transform", `translate(${margin.left},0)`)
     .style("opacity", 0)
     .call(d3.axisLeft(y).tickFormat(d3.format(".2s")));
-  
+
   yAxis.transition()
     .duration(600)
     .delay(400)
     .style("opacity", 1);
 
+  // Title
   svg.append("text")
     .attr("x", width / 2)
     .attr("y", margin.top / 2)
