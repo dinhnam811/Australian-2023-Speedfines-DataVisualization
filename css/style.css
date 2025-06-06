@@ -378,4 +378,102 @@ body {
     font-size: 0.95rem;
     padding: 1rem;
   }
+  .about-card-grid {
+    grid-template-columns: 1fr; 
+  }
+}
+/* --- Header layout --- */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* --- Hamburger setup --- */
+.nav-wrapper {
+  position: relative;
+}
+
+/* Hamburger icon */
+.hamburger {
+  display: none;
+  font-size: 1.8rem;
+  background-color: #e8f0fa;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  z-index: 999;
+  transition: background-color 0.2s ease;
+}
+
+.hamburger:hover {
+  background-color: #d2e6f5;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+/* Full width menu styles */
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .nav-buttons {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    background-color: white;
+    padding: 1rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    z-index: 998;
+    animation: dropdownFade 0.25s ease-in-out;
+  }
+
+  .menu-toggle:checked ~ .nav-buttons {
+    display: flex;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .nav-buttons button {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+    color: #1d3557;
+  }
+
+  .nav-buttons button:hover,
+  .toggle-btn.active {
+    background-color: #1d3557;
+    color: whitesmoke;
+  }
+}
+
+/* Optional: dropdown fade animation */
+@keyframes dropdownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

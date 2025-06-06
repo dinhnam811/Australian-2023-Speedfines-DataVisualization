@@ -19,10 +19,17 @@
           <select id="year-filter">
             <option value="2023" selected>2023</option>
           </select>
-        
-          <button class="toggle-btn" onclick="showSection('top', this)">Overview</button>
-          <button class="toggle-btn" onclick="showSection('bottom', this)">Trends</button>
-          <button class="toggle-btn" onclick="showSection('about', this)">About</button>
+          <div class="nav-wrapper">
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="hamburger">&#9776;</label>
+          
+            <div class="nav-buttons">
+              <button class="toggle-btn" onclick="showSection('top', this)">Overview</button>
+              <button class="toggle-btn" onclick="showSection('bottom', this)">Trends</button>
+              <button class="toggle-btn" onclick="showSection('about', this)">About</button>
+            </div>
+          </div>
+          
         </div>        
       </div>
     </div>
