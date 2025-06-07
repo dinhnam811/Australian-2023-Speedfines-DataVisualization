@@ -420,6 +420,32 @@ body {
   display: flex;
   gap: 1rem;
 }
+.dashboard-footer {
+  background-color: #e8f0fa;
+  padding: 1.5rem 1rem;
+  margin-top: 2rem;
+  border-top: 1px solid #ccc;
+  font-size: 14px;
+  color: #444;
+  text-align: center;
+  width: 100%;
+}
+
+.dashboard-footer .footer-content p {
+  margin: 0.4rem 0;
+  line-height: 1.4;
+}
+
+.dashboard-footer a {
+  color: #1d3557;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dashboard-footer a:hover {
+  text-decoration: underline;
+}
+
 
 @media (max-width: 768px) {
   .nav-buttons {
