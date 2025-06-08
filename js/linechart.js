@@ -115,7 +115,39 @@ function drawLineChart(data) {
     .attr("y", 9)
     .style("font-size", "10px")
     .text(d => d);
-
+    // === Fixed Annotations Under the Line Chart ===
+    const annotations = [
+      {
+        label: "⚫ Monthly values of QLD are averaged based on yearly totals. No true month-by-month data was available."
+      },
+    ];
+  
+    // Add vertical dashed lines
+    svg.selectAll(".annotation-line")
+      .data(annotations)
+      .enter()
+      .append("line")
+      .attr("class", "annotation-line")
+      .attr("x1", width)
+      .attr("x2", width)
+      .attr("y1", height)
+      .attr("y2", height + 20)
+      .attr("stroke", "#999")
+      .attr("stroke-dasharray", "3 2");
+  
+    // Add text labels under each annotation line
+    svg.selectAll(".annotation-text")
+      .data(annotations)
+      .enter()
+      .append("text")
+      .attr("class", "annotation-text")
+      .attr("x", width - 140 )
+      .attr("y", height + 40)
+      .attr("text-anchor", "middle")
+      .style("font-size", "10px")
+      .style("fill", "#555")
+      .text(d => d.label);
+  
   // Initial summary bar chart
   const yearlyTotals = Array.from(d3.rollup(data, v => d3.sum(v, d => d.fine), d => d.state), ([state, fine]) => ({ state, fine }));
   drawMonthlyBarChart(yearlyTotals, null);

@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Speeding Dashboard</title>
   <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="/css/statchart.css" />
-  <link rel="stylesheet" href="/css/piechart.css" />
+  <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
   <div class="dashboard">
     <div class="dashboard-header">
       <div class="header-row">
-        <h1>Speeding Dashboard</h1>
+        <h1>Australia’s Speeding Data 2023</h1>
     
         <div class="filters">
           <select id="year-filter">
@@ -54,12 +53,12 @@
         <div class="about-intro-card">
           This section helps users explore the <strong>temporal and spatial distribution</strong> of speeding fines across Australian jurisdictions in 2023. Use the visualisations below to identify:
         <ul class="trend-list">
-          <li>📊 <strong>Monthly fluctuations</strong> in fines by state (e.g. surges due to campaigns, school holidays, etc.)</li>
-          <li>🏁 <strong>State-by-state comparisons</strong> of total speeding penalties issued</li>
-          <li>⏱️ <strong>Trends in enforcement consistency</strong> across time and location</li>
+          <li><strong>Monthly fluctuations</strong> in fines by state (e.g. surges due to campaigns, school holidays, etc.)</li>
+          <li><strong>State-by-state comparisons</strong> of total speeding penalties issued</li>
+          <li><strong>Trends in enforcement consistency</strong> across time and location</li>
         </ul>
         </div>
-        <div class="chart-box medium" id="line-chart"></div>
+        <div class="chart-box medium" id="line-chart"><p id="line-annotation" class="line-note">cvscscscs</p></div>
         <div class="chart-box medium" id="monthly-chart"></div>
       </div>
     </div>
@@ -70,15 +69,16 @@
 
         <!-- Full-width intro card -->
         <div class="about-intro-card">
-          <h2>🚗 About the Dashboard</h2>
+          <h2>About us</h2>
           <p>This project presents an <strong>interactive web-based dashboard</strong> that visualizes <strong>speeding fines data across Australian states and territories in 2023</strong>. Its core aim is to convert large volumes of enforcement records into a <strong>clear, accessible, and engaging format</strong> to support public understanding and informed decision-making.</p>
         </div>
       
         <!-- Side-by-side card grid for the rest -->
         <div class="about-card-grid">
           <div class="about-card">
-            <h3>🎯 Target Audience</h3>
+            <h3>Target</h3>
             <ul>
+              <li><strong>Young people (18-25):</strong> More likely to seek information online—making them a key audience for this web-based speeding overview.</li>
               <li><strong>Mature drivers (40–64):</strong> Encouraged to reflect on behavior using relatable insights.</li>
               <li><strong>Policymakers & Law Enforcement:</strong> Use data to inform enforcement strategy.</li>
               <li><strong>General Public & Educators:</strong> Raise awareness and aid driver safety education.</li>
@@ -87,7 +87,7 @@
           </div>
       
           <div class="about-card">
-            <h3>❓ Purpose of the Visualisation</h3>
+            <h3>Purpose</h3>
             <ul>
               <li>Identify which states issue the most fines</li>
               <li>Compare enforcement methods like speed cameras or police patrols</li>
@@ -97,7 +97,7 @@
           </div>
       
           <div class="about-card">
-            <h3>✔️ Benefits & Impact</h3>
+            <h3>Impact</h3>
             <ul>
               <li><strong>Visual clarity:</strong> Makes complex data easy to understand</li>
               <li><strong>Behavioral insight:</strong> Encourages accountability in high-risk demographics</li>
@@ -107,12 +107,12 @@
           </div>
       
           <div class="about-card">
-            <h3>🏎️ Speeding Fines – Data Overview</h3>
+            <h3>Australian Speeding Fines Explorer – 2023</h3>
             <ul>
-              <li>🚗 More than <strong>2.7 million speeding fines</strong> were issued nationally in 2023.</li>
-              <li>📍 VIC and NSW recorded the highest fine volumes.</li>
-              <li>👥 Mature drivers (40–64) had higher proportions of camera-detected violations.</li>
-              <li>📸 Speed camera use rose 18% from pre-pandemic levels (compared to 2022).</li>
+              <li>More than <strong>2.7 million speeding fines</strong> were issued nationally in 2023.</li>
+              <li>VIC and NSW recorded the highest fine volumes.</li>
+              <li>Mature drivers (40–64) had higher proportions of camera-detected violations.</li>
+              <li>Speed camera use rose 18% from pre-pandemic levels (compared to 2022).</li>
             </ul>
           </div>
         </div>

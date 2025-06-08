@@ -1,13 +1,11 @@
 // === Annotation Texts by State ===
 const stateAnnotations = {
-  "NSW": "NSW reports high urban population and enforcement.",
-  "VIC": "Victoria shows strong policy-driven data accuracy.",
-  "QLD": "QLD has no exact age group breakdown data available. Only validated detections from camera offices are included.",
-  "WA": "Uses mixed detection modes (e.g., OTS, ASC, red-lights)",
-  "SA": "South Australia data reflects regional bias.",
-  "TAS": "Technical constraints affect data consistency.",
-  "NT": "NT includes high-speed zone enforcement.",
-  "ACT": "ACT shown enlarged due to small land area."
+  "NSW": "In New South Wales, police collects police-issued fines, but camera fines are publicly available and collected by NSW Revenue. No accurate count of arrests too.",
+  "QLD": "Queensland has no exact age group breakdown data available. Only validated detections from camera offices are included.",
+  "VIC": "Victoria has no accurate data available for the count of arrests and charges.",
+  "ACT": "ACT has no accurate data available for the count of arrests and charges.",
+  "TAS": "Tasmania has no accurate data available for the count of arrests.",
+  "WA": "Detection modes include On-The-Spot (OTS), mobile camera, fixed camera, average speed camera and red light camera."
 };
 
 d3.json("js/australia-map.geo.json").then(geoData => {
@@ -235,7 +233,7 @@ d3.json("js/australia-map.geo.json").then(geoData => {
           d3.select("#map-annotation").text(annotation);
 
         }
-        
+
         mapGroup.selectAll("path")
           .transition()
           .duration(300)

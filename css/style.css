@@ -2,7 +2,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Roboto", "Segoe UI", sans-serif;
+  font-family: "Inter";
   background-color: #ffffff;
   color: #333;
   overflow-x: hidden;
@@ -124,16 +124,19 @@ body {
   position: absolute;
   bottom: 12px;
   left: 20px;
-  font-size: 13px;
+  right: 20px;
+  font-size: 11px;
   font-style: italic;
-  color: #444;
+  font-weight: 500;
+  color: #1d3557;
   display: flex;
-  align-items: center;
+  align-items: left;
   gap: 6px;
 }
 
 .map-note::before {
   content: '⚠️';
+  align-items: left;
   font-style: normal;
   font-size: 14px;
 }
