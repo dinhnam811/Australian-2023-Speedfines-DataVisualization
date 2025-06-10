@@ -112,7 +112,7 @@ body {
 
 .chart-box.medium {
   flex: 1 1 48%;
-  min-width: 300px; /* ensures they stack on small screens */
+  min-width: 300px; 
 }
 
 .chart-box.large {
@@ -191,7 +191,7 @@ body {
 }
 
 #stat-chart .fines-value {
-  color: #1d3557; /* Blue (keep default) */
+  color: #1d3557; /* Blue ( default) */
 }
 
 #stat-chart .arrests-value,
