@@ -25,4 +25,4 @@ This project is an interactive data visualization dashboard that displays speedi
 
 ## Usage
 
-- **Link to the Dashboard:** https://dinhnam811.github.io/australian-speed-fines-visualisation-2023/
+- **Link to the Dashboard:** https://dinhnam811.github.io/australian-2023-speed-fines/
